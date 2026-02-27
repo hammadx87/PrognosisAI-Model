@@ -1,69 +1,64 @@
 import streamlit as st
-import requests
-import json
+from groq import Groq
 
-# 1. Page Configuration
-st.set_page_config(page_title="PrognosisAI - Assistant", page_icon="🤖", layout="wide")
+# 1. Page Configuration - Pro Look
+st.set_page_config(
+    page_title="PrognosisAI Backend", 
+    page_icon="🤖", 
+    layout="centered"
+)
 
-# 2. Custom CSS for Styling
-st.markdown("""
-    <style>
-    .stApp { background-color: #0E1117; color: white; }
-    .stChatMessage { padding: 15px; border-radius: 10px; margin-bottom: 10px; }
-    .stChatMessage.user { background-color: #262730; }
-    .stChatMessage.assistant { background-color: #31333F; }
-    .stTextInput { position: fixed; bottom: 30px; }
-    </style>
-    """, unsafe_allow_html=True)
-
-# 3. Sidebar Setup
-with st.sidebar:
-    st.title("🤖 PrognosisAI")
-    st.subheader("Hammad's Personal Agent")
-    st.markdown("---")
-    st.success("🟢 Ollama System Status: Running (via Ngrok)")
-    st.info("Model: qwen2.5-coder")
-
-# 4. Header
-st.markdown("# 🚀 PrognosisAI Chat Interface")
-st.write("Hello Hammad! How can I help you today?")
+# 2. Header for Public Viewing
+st.title("🤖 PrognosisAI Agent")
+st.subheader("Official Personal Agent Backend")
 st.markdown("---")
 
-# 5. Initialize Chat History
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+# 3. Sidebar - API Key Input (Testing Purpose)
+with st.sidebar:
+    st.header("Settings")
+    api_key = st.text_input("Enter Groq API Key", type="password")
+    st.info("PrognosisAI is running on Llama3 Cloud API.")
 
-# Display chat messages
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+if api_key:
+    # Initialize Groq Client
+    client = Groq(api_key=api_key)
+    
+    # 4. Personality/Agent Persona Setup
+    if "messages" not in st.session_state:
+        st.session_state.messages = [
+            {
+                "role": "system",
+                "content": "You are PrognosisAI, the official personal agent for Hammad. You are intelligent, polite, and efficient. Always address the user as Hammad and maintain a professional yet friendly tone."
+            }
+        ]
 
-# 6. Chat Input & Processing
-if prompt := st.chat_input("Ask PrognosisAI..."):
-    # User Message
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
+    # 5. Display Chat History
+    for message in st.session_state.messages:
+        if message["role"] != "system":
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
 
-    # Ollama API Request (Replace with your actual NGROK URL)
-    ngrok_url = "https://randa-unapprehended-appeasably.ngrok-free.dev/api/generate" # <--- APNA NGROK LINK YAHAN DALEIN
-    payload = {
-        "model": "qwen2.5-coder",
-        "prompt": prompt,
-        "stream": False
-    }
+    # 6. User Input
+    if prompt := st.chat_input("Ask PrognosisAI..."):
+        # Add user message to history
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
 
-    with st.chat_message("assistant"):
-        with st.spinner("PrognosisAI is thinking..."):
-            try:
-                response = requests.post(ngrok_url, json=payload)
-                response.raise_for_status()
-                response_data = response.json()
-                answer = response_data.get("response", "Error: No response from model.")
-                st.markdown(answer)
-                st.session_state.messages.append({"role": "assistant", "content": answer})
-            except Exception as e:
-                st.error(f"Error: {e}")
-
-
-
+        # 7. AI Response
+        with st.chat_message("assistant"):
+            with st.spinner("PrognosisAI is thinking..."):
+                try:
+                    chat_completion = client.chat.completions.create(
+                        messages=st.session_state.messages,
+                        model="llama3-8b-8192", # Reliable & Fast Model
+                        temperature=0.5,
+                    )
+                    
+                    response = chat_completion.choices[0].message.content
+                    st.markdown(response)
+                    st.session_state.messages.append({"role": "assistant", "content": response})
+                except Exception as e:
+                    st.error(f"Error: {e}")
+else:
+    st.warning("⚠️ Please enter your Groq API Key in the sidebar to activate the agent.")
