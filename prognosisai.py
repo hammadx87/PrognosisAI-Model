@@ -51,9 +51,9 @@ if api_key:
                 try:
                    chat_completion = client.chat.completions.create(
     messages=st.session_state.messages,
-    model="llama-3.1-8b-instant", # <--- Use this supported model name
+    model="llama-3.1-8b-instant", # <--- YE UPDATE KAREIN
     temperature=0.5,
-                    )
+)
                     
                     response = chat_completion.choices[0].message.content
                     st.markdown(response)
@@ -62,6 +62,7 @@ if api_key:
                     st.error(f"Error: {e}")
 else:
     st.warning("⚠️ Please enter your Groq API Key in the sidebar to activate the agent.")
+
 
 
 
