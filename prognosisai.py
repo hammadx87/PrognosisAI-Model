@@ -66,3 +66,4 @@ if prompt := st.chat_input("Ask PrognosisAI..."):
                 st.error(f"Error: {e}")
 
 
+
