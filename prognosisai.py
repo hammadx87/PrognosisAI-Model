@@ -46,7 +46,7 @@ if prompt := st.chat_input("Ask PrognosisAI..."):
         st.markdown(prompt)
 
     # Ollama API Request (Replace with your actual NGROK URL)
-    ngrok_url = "https://randa-unapprehended-appeasably.ngrok-free.dev/api/generate" # <--- APNA NGROK LINK YAHAN DALEIN
+    ngrok_url = "https://randa-unapprehended-appeasably.ngrok-free.dev" # <--- APNA NGROK LINK YAHAN DALEIN
     payload = {
         "model": "qwen2.5-coder",
         "prompt": prompt,
@@ -64,3 +64,4 @@ if prompt := st.chat_input("Ask PrognosisAI..."):
                 st.session_state.messages.append({"role": "assistant", "content": answer})
             except Exception as e:
                 st.error(f"Error: {e}")
+
