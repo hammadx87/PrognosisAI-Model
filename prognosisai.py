@@ -26,7 +26,7 @@ if prompt := st.chat_input("Ask PrognosisAI "):
         response_placeholder = st.empty()
         full_response = ""
 
-        url = "http://localhost:11434/api/generate"
+        url = "https://randa-unapprehended-appeasably.ngrok-free.dev/api/generate"
         data = {
             "model": "prognosisAI",
             "prompt": prompt,
@@ -40,5 +40,6 @@ if prompt := st.chat_input("Ask PrognosisAI "):
         except:
             full_response = "Sorry, Ollama se connect nahi ho pa raha."
             response_placeholder.markdown(full_response)
+
 
     st.session_state.messages.append({"role": "assistant", "content": full_response})
