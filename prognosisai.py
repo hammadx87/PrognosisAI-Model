@@ -51,7 +51,7 @@ if api_key:
                 try:
                     chat_completion = client.chat.completions.create(
     messages=st.session_state.messages,
-    model="llama3-8b-85b-api-host-v1", # <--- YA KOI BHI NAYA ACTIVE MODEL NAME
+    model="llama3-8b-8192", # <--- YA KOI BHI NAYA ACTIVE MODEL NAME
     temperature=0.5,
                     )
                     
@@ -62,4 +62,5 @@ if api_key:
                     st.error(f"Error: {e}")
 else:
     st.warning("⚠️ Please enter your Groq API Key in the sidebar to activate the agent.")
+
 
