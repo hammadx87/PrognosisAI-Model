@@ -50,9 +50,9 @@ if api_key:
             with st.spinner("PrognosisAI is thinking..."):
                 try:
                     chat_completion = client.chat.completions.create(
-                        messages=st.session_state.messages,
-                        model="llama3-8b-8192", # Reliable & Fast Model
-                        temperature=0.5,
+    messages=st.session_state.messages,
+    model="llama3-8b-85b-api-host-v1", # <--- YA KOI BHI NAYA ACTIVE MODEL NAME
+    temperature=0.5,
                     )
                     
                     response = chat_completion.choices[0].message.content
@@ -62,3 +62,4 @@ if api_key:
                     st.error(f"Error: {e}")
 else:
     st.warning("⚠️ Please enter your Groq API Key in the sidebar to activate the agent.")
+
